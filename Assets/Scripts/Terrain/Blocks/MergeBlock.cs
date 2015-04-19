@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class MergeBlock : MonoBehaviour {
+public abstract class MergeBlock : MonoBehaviour
+{
     //upper blocks which generated this merge block
     protected TerrainBlock[] parents;
     //lower block on which this merge block rests
@@ -24,22 +25,15 @@ public abstract class MergeBlock : MonoBehaviour {
     and the set of blocks to be the new merge block's parents and base.
     Element 0 is the base, elements 1-4 are upper parents and elements 0 and 1 must be non-null.
     Element 1 must be the block trying to generate this merge block*/
-    public static MergeBlock initialize(string prefabName, string[] conflictEval, Vector3 position, TerrainBlock[] parentSet)
+    public static MergeBlock initialize(string prefabName, string prefabFullName, Vector3 position, TerrainBlock[] parentSet)
     {
-        //set up full prefab name for each merge block
-        string[] prefabFullName = new string[4];
-        for (int i = 0; i < 4; i++)
-        {
-            prefabFullName[i] = prefabName + conflictEval[i];
-        }
-
         if (parentSet[0] == null || parentSet[1] == null)
         {
             Debug.LogError("Failed to initialize merge block. Missing base or primary parent.");
             return null;
         }
 
-        GameObject block = (GameObject)Instantiate(Resources.Load(prefabName));
+        GameObject block = (GameObject)Instantiate(Resources.Load(prefabFullName));
         position.x = Mathf.Floor(position.x);
         position.y = Mathf.Floor(position.y);
         position.z = Mathf.Floor(position.z);

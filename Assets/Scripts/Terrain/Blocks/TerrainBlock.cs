@@ -153,8 +153,9 @@ public abstract class TerrainBlock : MonoBehaviour
             {
                 priorBlock.dispose();
             }
+            //set up full prefab name for each merge block
             //create the new merge block and add it to the list of child blocks for this block
-            MergeBlock newBlock = (MergeBlock)MergeBlock.initialize(prefabBase, conflictEval, pos, parents);
+            MergeBlock newBlock = (MergeBlock)MergeBlock.initialize(prefabBase, prefabBase + conflictEval[i], pos, parents);
             if (newBlock == null) //failed to create this merge block. 
             { //an error should be logged in the merge block creation code; don't do it here
                 continue;

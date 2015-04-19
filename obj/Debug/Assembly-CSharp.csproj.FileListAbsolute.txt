@@ -21,3 +21,4 @@ C:\Users\Admin\Documents\GitHub\UnityTesting\Temp\bin\Debug\Unity.DataContract.d
 C:\Users\Admin\Documents\GitHub\UnityTesting\Temp\bin\Debug\ICSharpCode.NRefactory.dll
 C:\Users\Admin\Documents\GitHub\UnityTesting\obj\Debug\Assembly-CSharp.dll
 C:\Users\Admin\Documents\GitHub\UnityTesting\obj\Debug\Assembly-CSharp.pdb
+C:\Users\Admin\Documents\GitHub\UnityTesting\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
