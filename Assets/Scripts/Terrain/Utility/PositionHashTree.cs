@@ -8,7 +8,7 @@ public class PositionHashTree
     {
         //Members
         string hash;
-        TerrainBlock block;
+        MonoBehaviour block;
         //children of this node
         public HTNode left;
         public HTNode right;
@@ -16,7 +16,7 @@ public class PositionHashTree
         public HTNode parent;
 
         //Constructors
-        public HTNode(string h, TerrainBlock b)
+        public HTNode(string h, MonoBehaviour b)
         {
             hash = h;
             block = b;
@@ -83,12 +83,12 @@ public class PositionHashTree
                 return left.minimum();
         }
 
-        public TerrainBlock getBlock()
+        public MonoBehaviour getBlock()
         {
             return block;
         }
 
-        public void setBlock(TerrainBlock b)
+        public void setBlock(MonoBehaviour b)
         {
             block = b;
         }
@@ -159,13 +159,13 @@ public class PositionHashTree
         root = new HTNode("0", null);
     }
 
-    public PositionHashTree(TerrainBlock mergeableBlock)
+    public PositionHashTree(MonoBehaviour mergeableBlock)
     {
         root = null;
         addBlock(mergeableBlock);
     }
 
-    private static string hashPosition(TerrainBlock mergeableBlock)
+    private static string hashPosition(MonoBehaviour mergeableBlock)
     {
         Vector3 vec;
         vec.x = mergeableBlock.transform.position.x;
@@ -177,8 +177,7 @@ public class PositionHashTree
 
     private static string hashPosition(Vector3 position)
     {
-        if (position == null)
-            return null;
+        //implementation note: Vector3 is guaranteed by C# to not be null
         string hash = "";
 
         hash += Mathf.RoundToInt(position.x).ToString();
@@ -188,7 +187,7 @@ public class PositionHashTree
         return hash;
     }
 
-    public bool addBlock(TerrainBlock mergeableBlock)
+    public bool addBlock(MonoBehaviour mergeableBlock)
     {
         string hash = hashPosition(mergeableBlock);
         HTNode newNode = new HTNode(hash, mergeableBlock);
@@ -200,7 +199,7 @@ public class PositionHashTree
         return true;
     }
 
-    public TerrainBlock findBlock(Vector3 pos)
+    public MonoBehaviour findBlock(Vector3 pos)
     {
         string hash = hashPosition(pos);
         HTNode node = root.findBlock(hash);
@@ -240,5 +239,10 @@ public class PositionHashTree
         }
         node.dispose();
         return true;
+    }
+
+    public bool removeBlock(MonoBehaviour mono)
+    {
+        return removeBlock(mono.transform.position);
     }
 }

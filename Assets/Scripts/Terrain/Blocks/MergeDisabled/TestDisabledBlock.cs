@@ -5,6 +5,6 @@ public class TestDisabledBlock : TerrainBlock
 {
     void Start()
     {
-        mergeEnabled = false;
+        mergeEnabled = true;
     }
 }

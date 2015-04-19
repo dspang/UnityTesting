@@ -10,3 +10,14 @@ C:\Users\Admin\Documents\TerrainTestProject\Temp\bin\Debug\ICSharpCode.NRefactor
 C:\Users\Admin\Documents\TerrainTestProject\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
 C:\Users\Admin\Documents\TerrainTestProject\obj\Debug\Assembly-CSharp.dll
 C:\Users\Admin\Documents\TerrainTestProject\obj\Debug\Assembly-CSharp.pdb
+C:\Users\Admin\Documents\GitHub\UnityTesting\Temp\bin\Debug\Assembly-CSharp.dll
+C:\Users\Admin\Documents\GitHub\UnityTesting\Temp\bin\Debug\Assembly-CSharp.pdb
+C:\Users\Admin\Documents\GitHub\UnityTesting\Temp\bin\Debug\UnityEditor.dll
+C:\Users\Admin\Documents\GitHub\UnityTesting\Temp\bin\Debug\UnityEngine.dll
+C:\Users\Admin\Documents\GitHub\UnityTesting\Temp\bin\Debug\UnityEngine.UI.dll
+C:\Users\Admin\Documents\GitHub\UnityTesting\Temp\bin\Debug\Mono.Cecil.dll
+C:\Users\Admin\Documents\GitHub\UnityTesting\Temp\bin\Debug\nunit.framework.dll
+C:\Users\Admin\Documents\GitHub\UnityTesting\Temp\bin\Debug\Unity.DataContract.dll
+C:\Users\Admin\Documents\GitHub\UnityTesting\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+C:\Users\Admin\Documents\GitHub\UnityTesting\obj\Debug\Assembly-CSharp.dll
+C:\Users\Admin\Documents\GitHub\UnityTesting\obj\Debug\Assembly-CSharp.pdb

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CreatePlaneOfWorldBorderBlocks : MonoBehaviour
 {
-    
+
     void Start()
     {
         createBlocks();
@@ -15,6 +15,5 @@ public class CreatePlaneOfWorldBorderBlocks : MonoBehaviour
             {
                 TerrainBlock.initialize("WorldBorderBlock", new Vector3(i, 0, j)); //get pointer to new WorldBorderBlock?
             }
-        TerrainBlock.initialize("TestDisabledBlock", new Vector3(0, 5, 0));
     }
 }

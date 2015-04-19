@@ -5,6 +5,6 @@ public class WorldBorderBlock : TerrainBlock
 {
     void Start()
     {
-        mergeEnabled = false;
+        mergeEnabled = true;
     }
 }
