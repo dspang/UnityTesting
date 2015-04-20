@@ -27,7 +27,7 @@ public class PositionHashTree
         public void dispose()
         {
             bool isLeftChild = (parent.left == this);
-            if(countChildren() == 0) // this node has no children
+            if (countChildren() == 0) // this node has no children
             {
                 if (isLeftChild)
                     parent.left = null;
@@ -56,28 +56,31 @@ public class PositionHashTree
             }
             else //this node has two children
             {
-                //find minimum of right tree
+                //find minimum of this node's subtree
                 HTNode min = right.minimum();
                 block = min.block;
                 hash = min.hash;
-                min.parent.left = null;
+                if (min.parent.left == min)
+                    min.parent.left = null;
+                else
+                    min.parent.right = null;
             }
         }
 
         public int countChildren()
         {
             int count = 0;
-            if(left != null)
+            if (left != null)
                 count++;
             if (right != null)
                 count++;
             return count;
         }
 
-        //finds minimum value in the tree
+        //finds minimum value in a tree
         public HTNode minimum()
         {
-            if(left == null)
+            if (left == null)
                 return this;
             else
                 return left.minimum();
@@ -179,9 +182,11 @@ public class PositionHashTree
     {
         //implementation note: Vector3 is guaranteed by C# to not be null
         string hash = "";
-
+        hash += 'x';
         hash += Mathf.RoundToInt(position.x).ToString();
+        hash += 'y';
         hash += Mathf.RoundToInt(position.y).ToString();
+        hash += 'z';
         hash += Mathf.RoundToInt(position.z).ToString();
 
         return hash;
@@ -230,10 +235,15 @@ public class PositionHashTree
             }
             else
             {
-                HTNode target = root.right.minimum();
-                target.parent.left = null;
-                root.setBlock(target.getBlock());
-                root.setHash(target.getHash());
+                HTNode min = root.right.minimum();
+                min.parent.left = null;
+                root.setBlock(min.getBlock());
+                root.setHash(min.getHash());
+
+                if (min.parent.left == min)
+                    min.parent.left = null;
+                else
+                    min.parent.right = null;
             }
             return true;
         }

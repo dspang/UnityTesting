@@ -5,11 +5,28 @@ public abstract class TerrainBlock : MonoBehaviour
 {
     public bool mergeEnabled = true; //blocks are mergeable by default
 
+    //public only for testing; should be made protected once this class is complete
     public static PositionHashTree PHT = new PositionHashTree();
 
+    //contains all merge blocks that are a child of this TerrainBlock
     public ArrayList merges = new ArrayList();
 
-    public static GameObject initialize(string prefabName, Vector3 position)
+    //destroys this terrain block
+    public void dispose()
+    {
+        PHT.removeBlock(this);
+        //inform children merges that they should re-evaluate after the loss of this block
+        while (merges.Count != 0)
+        {
+            ((MergeBlock)merges[0]).evaluate(this);
+            merges.RemoveAt(0);
+        }
+
+        //delete the gameObject hosting this script
+        Destroy(gameObject);
+    }
+
+    public static GameObject create(string prefabName, Vector3 position)
     {
         GameObject block = (GameObject)Instantiate(Resources.Load(prefabName));
         position.x = Mathf.Floor(position.x);
@@ -19,19 +36,29 @@ public abstract class TerrainBlock : MonoBehaviour
         Component c = block.GetComponent(prefabName);
         if (!(c is TerrainBlock))
         {
-            Debug.LogError("Tried to instantiate a TerrainBlock using a non-TerrainBlock prefab (did you forget to assign the prefab a TerrainBlock script?)");
+            Debug.LogError("Tried to instantiate a TerrainBlock using a non-TerrainBlock prefab" +
+                "(did you forget to assign the prefab a TerrainBlock script?)");
         }
         TerrainBlock tb = (TerrainBlock)c;
-        PHT.addBlock(tb);
+        tb.initialize();
         return block;
+    }
+
+    public void initialize()
+    {
+        PHT.addBlock(this);
     }
 
     //Handles creating merge blocks for this terrain block
     public void setupMergeBlocks(string prefabBase)
     {
-        TerrainBlock[] mergeableSet = findMergeableBlocks();
-        string[] conflictEval = evaluateMergeConflicts(mergeableSet);
-        generateMergeBlocks(mergeableSet, conflictEval, prefabBase);
+        //don't try to evaluate merge blocks if this block can't merge
+        if (!mergeEnabled)
+            return;
+
+        TerrainBlock[] mergeableSet = findMergeableBlocks(); //find set of blocks to merge with
+        string[] conflictEval = evaluateMergeConflicts(mergeableSet); //figure out any conflicts
+        generateMergeBlocks(mergeableSet, conflictEval, prefabBase); //generate the appropriate merge blocks
     }
 
     /*Returns mergeable blocks for this block in the first 4 elements of the array.
@@ -55,9 +82,15 @@ public abstract class TerrainBlock : MonoBehaviour
         int[] yCoords = { y - 1, y - 1, y - 1, y - 1 };
         int[] zCoords = { z + 1, z - 1, z, z };
 
+        /**************************************************
+         * Mergeable set (elements 0-3)
+        **************************************************/
         for (int i = 0; i < 4; i++)
         {
-            blocks[i] = (TerrainBlock)PHT.findBlock(new Vector3(xCoords[i], yCoords[i], zCoords[i]));
+            //find a block, if any, in that position
+            if((blocks[i] = (TerrainBlock)PHT.findBlock(new Vector3(xCoords[i], yCoords[i], zCoords[i]))) != null)
+                if (!blocks[i].mergeEnabled) //can't merge with us?
+                    blocks[i] = null; //then for the purpose of merging, this block does not exist
         }
 
         //search above each of the mergeable blocks for a block that would get in the way
@@ -70,7 +103,11 @@ public abstract class TerrainBlock : MonoBehaviour
             }
         }
 
+        /**************************************************
+         * Conflict set (elements 4-15)
+        **************************************************/
         //search for other blocks that could merge with this mergeable
+        int offset = 0;
         for (int i = 0; i < 4; i++)
         {
             if (blocks[i] == null)
@@ -78,7 +115,10 @@ public abstract class TerrainBlock : MonoBehaviour
             Vector3[] positions = calcOtherMergerPositions(blocks[i]);
             for (int j = 0; j < 3; j++)
             {
-                blocks[(i * 3) + 4 + j] = (TerrainBlock)PHT.findBlock(positions[j]);
+                offset = (i * 3) + 4 + j;
+                if ((blocks[offset] = (TerrainBlock)PHT.findBlock(positions[j])) != null)
+                    if (!blocks[offset].mergeEnabled) //can't conflict with a block that cannot merge
+                        blocks[offset] = null; //so don't consider it
             }
         }
 
@@ -140,7 +180,7 @@ public abstract class TerrainBlock : MonoBehaviour
             int offset = (i * 3) + 4;
             for (int j = 0; j < 3; j++)
             {
-                parents[j] = mergeableEval[offset + j];
+                parents[j+2] = mergeableEval[offset + j];
             }
 
             if (mergeableEval[i] == null)
@@ -153,14 +193,13 @@ public abstract class TerrainBlock : MonoBehaviour
             {
                 priorBlock.dispose();
             }
-            //set up full prefab name for each merge block
             //create the new merge block and add it to the list of child blocks for this block
-            MergeBlock newBlock = (MergeBlock)MergeBlock.initialize(prefabBase, prefabBase + conflictEval[i], pos, parents);
+            MergeBlock newBlock = (MergeBlock)MergeBlock.create(prefabBase, prefabBase + conflictEval[i], pos, parents);
             if (newBlock == null) //failed to create this merge block. 
-            { //an error should be logged in the merge block creation code; don't do it here
+            { //error that caused the failure should be logged in the merge block creation code; don't do it here
                 continue;
             }
-                merges.Add(newBlock);
+            merges.Add(newBlock);
             //as well as any other blocks that should be made aware of this
             for (int j = 4; j < 16; j++)
             {
