@@ -79,8 +79,11 @@ public abstract class MergeBlock : MonoBehaviour
         position.z = Mathf.Floor(position.z);
         block.transform.position = position;
         Vector3 noYComponent = new Vector3(1, 0, 1);
-        block.transform.rotation.SetFromToRotation(Vector3.Scale(position, noYComponent),
-            Vector3.Scale(parentSet[1].transform.position, noYComponent));
+        //orient merge block to parent block
+        block.transform.LookAt(parentSet[1].transform.position);
+        //then rotate it to face directly up
+        block.transform.Rotate(new Vector3(-90, -90, 0));
+        //block.transform.rotation.SetFromToRotation(parentSet[1].transform.position, position);
         Component c = block.GetComponent(prefabName);
         if (!(c is MergeBlock))
         {

@@ -132,9 +132,9 @@ public abstract class TerrainBlock : MonoBehaviour
         int x = (int)(b.transform.position.x);
         int y = (int)(b.transform.position.y);
         int z = (int)(b.transform.position.z);
-        float rel = Mathf.Atan2(z, x) - Mathf.Atan2(transform.position.z, transform.position.x);
+		float rel = Mathf.Atan2 (z - transform.position.z, x - transform.position.x);
         Vector3[] positions = new Vector3[3];
-        /*start out looking straight across (0 degrees relatively speaking),
+        /*start out looking straight across (0 degrees relative),
          * then looking to the left (+90 degrees relative),
          * then to the right (+180 degrees relative, 270 degrees absolute) */
         float[] offset = { 0.50f * Mathf.PI, 1.0f * Mathf.PI, 0f };

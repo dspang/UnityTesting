@@ -32,6 +32,5 @@ public class TESTSCRIPTREMOVEME : MonoBehaviour
     IEnumerator corout()
     {
         yield return new WaitForSeconds(1);
-        disblock2.dispose();
     }
 }
