@@ -6,7 +6,7 @@ public abstract class TerrainBlock : MonoBehaviour
     public bool mergeEnabled = true; //blocks are mergeable by default
 
     //public only for testing; should be made protected once this class is complete
-    public static PositionHashTree PHT = new PositionHashTree();
+    public static PositionHashTable PHT = new PositionHashTable();
 
     //contains all merge blocks that are a child of this TerrainBlock
     public ArrayList merges = new ArrayList();
@@ -22,7 +22,7 @@ public abstract class TerrainBlock : MonoBehaviour
             merges.RemoveAt(0);
         }
 
-        //delete the gameObject hosting this script
+        //delete the gameObject hosting this script and this script by extension
         Destroy(gameObject);
     }
 
@@ -47,6 +47,7 @@ public abstract class TerrainBlock : MonoBehaviour
     public void initialize()
     {
         PHT.addBlock(this);
+        setupMergeBlocks("TestMergeBlock");
     }
 
     //Handles creating merge blocks for this terrain block
@@ -61,7 +62,8 @@ public abstract class TerrainBlock : MonoBehaviour
         generateMergeBlocks(mergeableSet, conflictEval, prefabBase); //generate the appropriate merge blocks
     }
 
-    /*Returns mergeable blocks for this block in the first 4 elements of the array.
+    /*
+    Returns mergeable blocks for this block in the first 4 elements of the array.
     Returns other blocks that can merge with each mergeable in the next 12 members
     such that each mergeable's potential mergers follow the pattern:
     (mergeable blocks 1, 2, 3, 4 have potential mergers a, b, c, d respectively)
@@ -200,7 +202,7 @@ public abstract class TerrainBlock : MonoBehaviour
                 continue;
             }
             merges.Add(newBlock);
-            //as well as any other blocks that should be made aware of this
+            //add it to the merge block list of any other blocks that should be made aware of this
             for (int j = 4; j < 16; j++)
             {
                 if (mergeableEval[j] == null || mergeableEval[j].merges.Contains(newBlock))

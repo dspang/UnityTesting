@@ -1,9 +1,48 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PositionHashTree
-{
 
+public class PositionHashTable
+{
+    Hashtable HT;
+    public PositionHashTable()
+    {
+        HT = new Hashtable();
+    }
+
+    public void addBlock(MonoBehaviour mergeableBlock)
+    {
+        string position = generatePositionString(mergeableBlock.transform.position);
+        HT.Add(position, mergeableBlock);
+    }
+
+    public void removeBlock(MonoBehaviour mergeableBlock)
+    {
+        string position = generatePositionString(mergeableBlock.transform.position);
+        HT.Remove(position);
+    }
+
+    public MonoBehaviour findBlock(Vector3 pos)
+    {
+        //implementation note: Vector3 is not nullable so input does not need to be checked
+        string position = generatePositionString(pos);
+        return (MonoBehaviour)HT[position];
+    }
+
+    private static string generatePositionString(Vector3 position)
+    {
+        string hash = "";
+        hash += 'x';
+        hash += Mathf.RoundToInt(position.x).ToString();
+        hash += 'y';
+        hash += Mathf.RoundToInt(position.y).ToString();
+        hash += 'z';
+        hash += Mathf.RoundToInt(position.z).ToString();
+
+        return hash;
+    }
+
+    /*
     class HTNode
     {
         //Members
@@ -12,7 +51,7 @@ public class PositionHashTree
         //children of this node
         public HTNode left;
         public HTNode right;
-        //parent of this node (needed for removal funcs)
+        //parent of this node (needed for removal func)
         public HTNode parent;
 
         //Constructors
@@ -180,7 +219,7 @@ public class PositionHashTree
 
     private static string hashPosition(Vector3 position)
     {
-        //implementation note: Vector3 is guaranteed by C# to not be null
+        //implementation note: Vector3 is not nullable so input does not need to be checked
         string hash = "";
         hash += 'x';
         hash += Mathf.RoundToInt(position.x).ToString();
@@ -198,7 +237,7 @@ public class PositionHashTree
         HTNode newNode = new HTNode(hash, mergeableBlock);
         if (!newNode.bstInsert(ref root))
         {
-            Debug.LogError("PositionHashTree::addBlock() - failed to insert new node into tree");
+            Debug.LogError("Failed to insert new node into tree");
             return false;
         }
         return true;
@@ -219,7 +258,7 @@ public class PositionHashTree
         HTNode node = root.findBlock(hashPosition(pos));
         if (node == null)
         {
-            Debug.LogError("PositionHashTree::removeBlock(Vector3) - Could not find block to be removed");
+            Debug.LogError("Could not find block to be removed");
             return false;
         }
         if (node == root) //root must be handled differently
@@ -255,4 +294,5 @@ public class PositionHashTree
     {
         return removeBlock(mono.transform.position);
     }
+    */
 }

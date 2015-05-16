@@ -10,6 +10,8 @@ public abstract class MergeBlock : MonoBehaviour
     //base name of the prefab set used to generate this merge block
     protected string prefabBase;
 
+    public static PositionHashTable PHT = new PositionHashTable();
+
     //determines what should be done with this merge block after the destruction of a parent
     public void evaluate(TerrainBlock lostParent)
     {
@@ -59,8 +61,6 @@ public abstract class MergeBlock : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public static PositionHashTree PHT = new PositionHashTree();
-
     /*Pass this function the name of a MergeBlock prefab, the desired position,
     and the set of blocks to be the new merge block's parents and base.
     Element 0 is the base, elements 1-4 are upper parents and elements 0 and 1 must be non-null.
@@ -78,12 +78,10 @@ public abstract class MergeBlock : MonoBehaviour
         position.y = Mathf.Floor(position.y);
         position.z = Mathf.Floor(position.z);
         block.transform.position = position;
-        Vector3 noYComponent = new Vector3(1, 0, 1);
         //orient merge block to parent block
         block.transform.LookAt(parentSet[1].transform.position);
         //then rotate it to face directly up
         block.transform.Rotate(new Vector3(-90, -90, 0));
-        //block.transform.rotation.SetFromToRotation(parentSet[1].transform.position, position);
         Component c = block.GetComponent(prefabName);
         if (!(c is MergeBlock))
         {
